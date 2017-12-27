@@ -645,4 +645,8 @@ public class TimeSelector {
         hour_pv.setSelColor(color);
         minute_pv.setSelColor(color);
     }
+
+    public void setSelYear(String data) {
+        year_pv.setSelected(data);
+    }
 }
