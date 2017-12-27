@@ -25,7 +25,7 @@ import java.util.Calendar;
 public class TimeSelector {
 
     public interface ResultHandler {
-        void handle(String time);
+        void handle(String time, long timeStamp);
     }
 
     public enum SCROLLTYPE {
@@ -158,7 +158,7 @@ public class TimeSelector {
         tv_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handler.handle(DateUtil.format(selectedCalender.getTime(), FORMAT_STR));
+                handler.handle(DateUtil.format(selectedCalender.getTime(), FORMAT_STR), selectedCalender.getTimeInMillis());
                 seletorDialog.dismiss();
             }
         });
@@ -375,8 +375,7 @@ public class TimeSelector {
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.YEAR, Integer.parseInt(text));
                 monthChange();
-
-
+//                dayChange();
             }
         });
         month_pv.setOnSelectListener(new PickerView.onSelectListener() {
@@ -410,8 +409,6 @@ public class TimeSelector {
             @Override
             public void onSelect(String text) {
                 selectedCalender.set(Calendar.MINUTE, Integer.parseInt(text));
-
-
             }
         });
 
@@ -440,27 +437,27 @@ public class TimeSelector {
     }
 
     private void monthChange() {
-
-        month.clear();
-        int selectedYear = selectedCalender.get(Calendar.YEAR);
-        if (selectedYear == startYear) {
-            for (int i = startMonth; i <= MAXMONTH; i++) {
-                month.add(fomatTimeUnit(i));
-            }
-        } else if (selectedYear == endYear) {
-            for (int i = 1; i <= endMonth; i++) {
-                month.add(fomatTimeUnit(i));
-            }
-        } else {
-            for (int i = 1; i <= MAXMONTH; i++) {
-                month.add(fomatTimeUnit(i));
-            }
-        }
-        selectedCalender.set(Calendar.MONTH, Integer.parseInt(month.get(0)) - 1);
-        month_pv.setData(month);
-        month_pv.setSelected(0);
+//        int mSel = month_pv.getSelectedPosition();
+//        month.clear();
+//        int selectedYear = selectedCalender.get(Calendar.YEAR);
+//        if (selectedYear == startYear) {
+//            for (int i = startMonth; i <= MAXMONTH; i++) {
+//                month.add(fomatTimeUnit(i));
+//            }
+//        } else if (selectedYear == endYear) {
+//            for (int i = 1; i <= endMonth; i++) {
+//                month.add(fomatTimeUnit(i));
+//            }
+//        } else {
+//            for (int i = 1; i <= MAXMONTH; i++) {
+//                month.add(fomatTimeUnit(i));
+//            }
+//        }
+//        selectedCalender.set(Calendar.MONTH, Integer.parseInt(month.get(0)) - 1);
+//        month_pv.setData(month);
+//        month_pv.setSelected(mSel);
         excuteAnimator(ANIMATORDELAY, month_pv);
-
+//        dayChange();
         month_pv.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -471,7 +468,7 @@ public class TimeSelector {
     }
 
     private void dayChange() {
-
+        int dSel = day_pv.getSelectedPosition();
         day.clear();
         int selectedYear = selectedCalender.get(Calendar.YEAR);
         int selectedMonth = selectedCalender.get(Calendar.MONTH) + 1;
@@ -490,9 +487,14 @@ public class TimeSelector {
         }
         selectedCalender.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(0)));
         day_pv.setData(day);
-        day_pv.setSelected(0);
+        if (dSel > day.size() - 1) {
+            dSel--;
+        }
+        if (dSel < 0) {
+            dSel = 0;
+        }
+        day_pv.setSelected(dSel);
         excuteAnimator(ANIMATORDELAY, day_pv);
-
         day_pv.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -631,5 +633,16 @@ public class TimeSelector {
         this.day_pv.setIsLoop(isLoop);
         this.hour_pv.setIsLoop(isLoop);
         this.minute_pv.setIsLoop(isLoop);
+    }
+
+    public void setMainColor(int color) {
+        tv_cancle.setTextColor(color);
+        tv_select.setTextColor(color);
+        tv_title.setTextColor(color);
+        year_pv.setSelColor(color);
+        month_pv.setSelColor(color);
+        day_pv.setSelColor(color);
+        hour_pv.setSelColor(color);
+        minute_pv.setSelColor(color);
     }
 }

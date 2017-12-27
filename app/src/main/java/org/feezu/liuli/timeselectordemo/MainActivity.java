@@ -1,5 +1,6 @@
 package org.feezu.liuli.timeselectordemo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,12 +23,13 @@ public class MainActivity extends AppCompatActivity {
 
         timeSelector = new TimeSelector(this, new TimeSelector.ResultHandler() {
             @Override
-            public void handle(String time) {
-                Toast.makeText(getApplicationContext(), time, Toast.LENGTH_LONG).show();
+            public void handle(String time, long timeStamp) {
+                Toast.makeText(getApplicationContext(), time + "-----" + timeStamp, Toast.LENGTH_LONG).show();
             }
         }, "1989-01-30 00:00", "2018-12-31 00:00");
-
-//        timeSelector.setIsLoop(false);
+        timeSelector.setIsLoop(false);
+        timeSelector.setMode(TimeSelector.MODE.YMD);
+        timeSelector.setMainColor(Color.BLUE);
     }
 
     public void show(View v) {

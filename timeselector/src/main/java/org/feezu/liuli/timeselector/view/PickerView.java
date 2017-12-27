@@ -42,7 +42,7 @@ public class PickerView extends View {
     /**
      * 选中的位置，这个位置是mDataList的中心位置，一直不变
      */
-    private int mCurrentSelected;
+    private int mCurrentSelected = 0;
     private Paint mPaint, nPaint;
 
     private float mMaxTextSize = 80;
@@ -52,7 +52,7 @@ public class PickerView extends View {
     private float mMinTextAlpha = 120;
 
     private int mColorText = 0x333333;
-    private int nColorText = 0x666666;
+    private int selColorText;
 
     private int mViewHeight;
     private int mViewWidth;
@@ -137,6 +137,10 @@ public class PickerView extends View {
         invalidate();
     }
 
+    public int getSelectedPosition() {
+        return mCurrentSelected;
+    }
+
     /**
      * 选择选中的内容
      *
@@ -187,7 +191,8 @@ public class PickerView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setStyle(Style.FILL);
         mPaint.setTextAlign(Align.CENTER);
-        mPaint.setColor(getResources().getColor(R.color.colorPrimary));
+        selColorText = getResources().getColor(R.color.colorPrimary);
+        mPaint.setColor(selColorText);
         //第二个paint
         nPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         nPaint.setStyle(Style.FILL);
@@ -201,9 +206,13 @@ public class PickerView extends View {
         // 根据index绘制view
         if (isInit)
             drawData(canvas);
+
     }
 
     private void drawData(Canvas canvas) {
+        if (mCurrentSelected > mDataList.size() - 1) {
+            mCurrentSelected = mDataList.size() - 1;
+        }
         // 先绘制选中的text再往上往下绘制其余的text
         float scale = parabola(mViewHeight / 4.0f, mMoveLen);
         float size = (mMaxTextSize - mMinTextSize) * scale + mMinTextSize;
@@ -377,5 +386,12 @@ public class PickerView extends View {
      */
     public void setIsLoop(boolean isLoop) {
         loop = isLoop;
+    }
+
+
+    public void setSelColor(int color) {
+        selColorText = color;
+        mPaint.setColor(selColorText);
+        postInvalidate();
     }
 }
